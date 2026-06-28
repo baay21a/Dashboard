@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Good Morning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #fff4e8;
+    --sky-mid: #ffd9b3;
+    --sky-low: #ffb88c;
+    --coral: #f7a8a0;
+    --coral-deep: #e8847a;
+    --plum: #7a4a5c;
+    --plum-soft: #a3717f;
+    --cream: #fffaf3;
+    --sun: #ffd66b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 100%);
+    font-family: 'Nunito', sans-serif;
+    color: var(--plum);
+    overflow-x: hidden;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+    position: relative;
+  }
+
+  /* rising sun */
+  .sun-stage {
+    position: relative;
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+
+  .sun {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--sun), var(--coral-deep));
+    box-shadow: 0 0 50px 14px rgba(255, 214, 107, 0.45);
+    position: relative;
+    animation: rise 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards, pulse 5s ease-in-out infinite 1.8s;
+    transform: translateY(70px);
+    opacity: 0;
+  }
+
+  @keyframes rise {
+    0% { transform: translateY(70px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 50px 14px rgba(255, 214, 107, 0.45); }
+    50% { box-shadow: 0 0 60px 20px rgba(255, 214, 107, 0.6); }
+  }
+
+  .sun-rays {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: fadeRays 1.5s ease forwards 1.2s;
+  }
+
+  @keyframes fadeRays {
+    to { opacity: 0.5; }
+  }
+
+  .sun-rays div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 14px;
+    background: var(--sun);
+    transform-origin: center 50px;
+    border-radius: 2px;
+  }
+
+  .greeting {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .greeting-eyebrow {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--plum-soft);
+    margin-bottom: 8px;
+  }
+
+  .greeting-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(28px, 7vw, 36px);
+    color: var(--plum);
+    line-height: 1.25;
+  }
+
+  .date-line {
+    text-align: center;
+    font-size: 13px;
+    color: var(--plum-soft);
+    margin-top: 8px;
+    margin-bottom: 36px;
+  }
+
+  /* card shared style */
+  .card {
+    background: rgba(255, 250, 243, 0.72);
+    border: 1px solid rgba(232, 132, 122, 0.22);
+    border-radius: 20px;
+    padding: 26px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 12px 30px rgba(180, 110, 90, 0.1);
+  }
+
+  .card-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral-deep);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .card-label .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--coral-deep);
+  }
+
+  /* note card */
+  .note-card {
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .note-envelope {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--plum-soft);
+    padding: 10px 0 4px;
+    transition: opacity 0.3s ease;
+  }
+
+  .note-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(18px, 4.5vw, 21px);
+    line-height: 1.7;
+    color: var(--plum);
+    display: none;
+    padding: 4px 0 2px;
+  }
+
+  .note-card.opened .note-envelope { display: none; }
+  .note-card.opened .note-text { display: block; animation: noteIn 0.5s ease forwards; }
+
+  @keyframes noteIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .note-hint {
+    font-size: 12px;
+    color: var(--plum-soft);
+    margin-top: 14px;
+    opacity: 0.7;
+  }
+
+  /* quote card */
+  .quote-text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--plum);
+    text-align: center;
+  }
+
+  .quote-author {
+    text-align: center;
+    font-size: 13px;
+    color: var(--plum-soft);
+    margin-top: 10px;
+  }
+
+  /* todo card */
+  .todo-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  #todoInput {
+    flex: 1;
+    border: 1px solid rgba(232, 132, 122, 0.3);
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: var(--plum);
+    outline: none;
+    transition: border-color 0.25s ease;
+  }
+
+  #todoInput:focus {
+    border-color: var(--coral-deep);
+  }
+
+  #todoInput::placeholder {
+    color: rgba(122, 74, 92, 0.4);
+  }
+
+  .add-btn {
+    background: var(--coral-deep);
+    border: none;
+    border-radius: 12px;
+    width: 42px;
+    color: var(--cream);
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .add-btn:hover {
+    background: var(--plum-soft);
+    transform: translateY(-1px);
+  }
+
+  .add-btn:active {
+    transform: scale(0.95);
+  }
+
+  .todo-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.45);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-size: 14px;
+    animation: itemIn 0.3s ease;
+  }
+
+  @keyframes itemIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .todo-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--coral-deep);
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+
+  .todo-check.checked {
+    background: var(--coral-deep);
+  }
+
+  .todo-check.checked::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cream);
+  }
+
+  .todo-item-text {
+    flex: 1;
+    color: var(--plum);
+    cursor: pointer;
+    transition: opacity 0.2s ease, text-decoration 0.2s ease;
+  }
+
+  .todo-item.done .todo-item-text {
+    opacity: 0.45;
+    text-decoration: line-through;
+  }
+
+  .todo-remove {
+    background: none;
+    border: none;
+    color: var(--plum-soft);
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .todo-remove:hover {
+    opacity: 1;
+  }
+
+  .todo-empty {
+    text-align: center;
+    font-size: 13px;
+    color: var(--plum-soft);
+    padding: 12px 0;
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--plum-soft);
+    opacity: 0.6;
+    margin-top: 24px;
+    font-style: italic;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+  }
+
+  @media (max-width: 380px) {
+    .wrap { padding: 44px 18px 60px; }
+    .card { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="sun-stage">
+    <div class="sun-rays" id="sunRays"></div>
+    <div class="sun"></div>
+  </div>
+
+  <div class="greeting">
+    <div class="greeting-eyebrow" id="timeGreeting">good morning</div>
+    <h1 class="greeting-title" id="nameGreeting">hello, love</h1>
+  </div>
+  <div class="date-line" id="dateLine"></div>
+
+  <!-- daily love note -->
+  <div class="card note-card" id="noteCard">
+    <div class="card-label"><span class="dot"></span>today's note</div>
+    <div class="note-envelope" id="noteEnvelope">tap to open today's letter</div>
+    <div class="note-text" id="noteText"></div>
+    <div class="note-hint" id="noteHint">tap to reveal</div>
+  </div>
+
+  <!-- quote -->
+  <div class="card">
+    <div class="card-label"><span class="dot"></span>something to carry today</div>
+    <div class="quote-text" id="quoteText"></div>
+    <div class="quote-author" id="quoteAuthor"></div>
+  </div>
+
+  <!-- todo -->
+  <div class="card">
+    <div class="card-label"><span class="dot"></span>today's list</div>
+    <div class="todo-input-row">
+      <input type="text" id="todoInput" placeholder="add something for today">
+      <button class="add-btn" id="addBtn" type="button" aria-label="Add item">+</button>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+    <div class="todo-empty" id="todoEmpty">nothing on the list yet — add your first thing</div>
+  </div>
+
+  <div class="footer-note">made with you in mind, every single morning</div>
+
+</div>
+
+<script>
+  // ---------- time-based greeting ----------
+  const hour = new Date().getHours();
+  const timeGreetingEl = document.getElementById('timeGreeting');
+  const nameGreetingEl = document.getElementById('nameGreeting');
+
+  let timeWord = 'good morning';
+  if (hour >= 5 && hour < 12) timeWord = 'good morning';
+  else if (hour >= 12 && hour < 17) timeWord = 'good afternoon';
+  else if (hour >= 17 && hour < 21) timeWord = 'good evening';
+  else timeWord = 'still up, love?';
+
+  timeGreetingEl.textContent = timeWord;
+
+  const nameGreetings = [
+    'hello, love',
+    'hi there, beautiful',
+    'good to see you',
+    'there she is'
+  ];
+  const dayIndex = new Date().getDate() % nameGreetings.length;
+  nameGreetingEl.textContent = nameGreetings[dayIndex];
+
+  const dateLine = document.getElementById('dateLine');
+  dateLine.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // ---------- sun rays ----------
+  const sunRays = document.getElementById('sunRays');
+  for (let i = 0; i < 12; i++) {
+    const ray = document.createElement('div');
+    ray.style.transform = `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-70px)`;
+    sunRays.appendChild(ray);
+  }
+
+  // ---------- daily rotating love note ----------
+  const loveNotes = [
+    "I know today might be ordinary on paper, but it's not ordinary to me \u2014 because you're in it. That's the whole difference.",
+    "Somewhere between your coffee this morning and your last class today, I just want you to know I'm thinking of you. I always am.",
+    "You carry more than you let on, and you do it with so much grace. I see it. I see you.",
+    "If today feels heavy, remember someone out here thinks the world of you, on the easy days and the hard ones both.",
+    "You're going to walk into a classroom someday soon and be exactly the kind of person a kid remembers forever. You already are that for me.",
+    "Some days I just miss you in the middle of doing nothing at all. Today's one of those days.",
+    "Whatever today asks of you, you've got it. You always do. I'm just lucky enough to watch.",
+    "I hope something small makes you smile today \u2014 and if nothing does, let this be that thing.",
+    "You make hard things look like less of a big deal than they are. I notice. I'm proud of you.",
+    "No matter how today goes, you get to come home to someone who's completely in your corner.",
+    "I think about how lucky I am more often than I say out loud. Today, I'm saying it.",
+    "Be a little gentle with yourself today, the way you're always gentle with everyone else.",
+    "You're allowed to have an easy day. You're allowed to have a hard one too. Either way, I'm here.",
+    "Today's note is short because the truth is short: I love you. That's really it.",
+    "If you forget everything else today, remember this \u2014 you are so deeply loved, on purpose, every day."
+  ];
+
+  function dayOfYear(date) {
+    const start = new Date(date.getFullYear(), 0, 0);
+    const diff = date - start;
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  }
+
+  const todayNote = loveNotes[dayOfYear(new Date()) % loveNotes.length];
+  document.getElementById('noteText').textContent = todayNote;
+
+  const noteCard = document.getElementById('noteCard');
+  const noteHint = document.getElementById('noteHint');
+  noteCard.addEventListener('click', function() {
+    const isOpen = noteCard.classList.contains('opened');
+    if (!isOpen) {
+      noteCard.classList.add('opened');
+      noteHint.textContent = "today's letter";
+    }
+  });
+
+  // ---------- daily quote ----------
+  const quotes = [
+    { text: "Teaching is the one profession that creates all other professions.", author: "unknown" },
+    { text: "The best teachers teach from the heart, not from the book.", author: "unknown" },
+    { text: "A teacher takes a hand, opens a mind, and touches a heart.", author: "unknown" },
+    { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+    { text: "Small steps every day add up to big things over time.", author: "unknown" },
+    { text: "You are doing better than you think you are.", author: "unknown" },
+    { text: "Patience and persistence are quietly powerful things.", author: "unknown" },
+    { text: "The work you're doing right now matters more than it feels like it does.", author: "unknown" },
+    { text: "Showing up consistently is its own kind of brave.", author: "unknown" },
+    { text: "Growth is rarely loud. Most of it happens quietly, on ordinary days like this one.", author: "unknown" }
+  ];
+
+  const todayQuote = quotes[dayOfYear(new Date()) % quotes.length];
+  document.getElementById('quoteText').textContent = '\u201c' + todayQuote.text + '\u201d';
+  document.getElementById('quoteAuthor').textContent = '\u2014 ' + todayQuote.author;
+
+  // ---------- todo list with localStorage ----------
+  const STORAGE_KEY = 'morning_dashboard_todos';
+  const todoInput = document.getElementById('todoInput');
+  const addBtn = document.getElementById('addBtn');
+  const todoList = document.getElementById('todoList');
+  const todoEmpty = document.getElementById('todoEmpty');
+
+  function loadTodos() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveTodos(todos) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    } catch (e) {}
+  }
+
+  let todos = loadTodos();
+
+  function renderTodos() {
+    todoList.innerHTML = '';
+    todoEmpty.style.display = todos.length === 0 ? 'block' : 'none';
+
+    todos.forEach((todo, index) => {
+      const li = document.createElement('li');
+      li.className = 'todo-item' + (todo.done ? ' done' : '');
+
+      const check = document.createElement('div');
+      check.className = 'todo-check' + (todo.done ? ' checked' : '');
+      check.addEventListener('click', () => {
+        todos[index].done = !todos[index].done;
+        saveTodos(todos);
+        renderTodos();
+      });
+
+      const text = document.createElement('span');
+      text.className = 'todo-item-text';
+      text.textContent = todo.text;
+      text.addEventListener('click', () => {
+        todos[index].done = !todos[index].done;
+        saveTodos(todos);
+        renderTodos();
+      });
+
+      const remove = document.createElement('button');
+      remove.className = 'todo-remove';
+      remove.type = 'button';
+      remove.setAttribute('aria-label', 'Remove item');
+      remove.textContent = '\u2715';
+      remove.addEventListener('click', () => {
+        todos.splice(index, 1);
+        saveTodos(todos);
+        renderTodos();
+      });
+
+      li.appendChild(check);
+      li.appendChild(text);
+      li.appendChild(remove);
+      todoList.appendChild(li);
+    });
+  }
+
+  function addTodo() {
+    const value = todoInput.value.trim();
+    if (!value) return;
+    todos.push({ text: value, done: false });
+    saveTodos(todos);
+    todoInput.value = '';
+    renderTodos();
+  }
+
+  addBtn.addEventListener('click', addTodo);
+  todoInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addTodo();
+  });
+
+  renderTodos();
+</script>
+
+</body>
+</html>
